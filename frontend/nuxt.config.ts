@@ -1,3 +1,4 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   typescript: {
@@ -5,19 +6,18 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: "http://localhost:3005/api",
+      apiBase: "http://localhost:3005/api", // Правильный порт бэкенда
     },
   },
-  ssr: false, // SPA mode
+  ssr: false,
   nitro: {
     devProxy: {
       "/api": {
-        target: "http://localhost:3000/api",
+        target: "http://localhost:3005/api", // Правильный порт бэкенда
         changeOrigin: true,
       },
     },
   },
-  // Явно включите автоматическое создание роутов
-  pages: true,
+  pages: true, // Убедитесь что роуты включены
   compatibilityDate: "2025-01-17",
 });

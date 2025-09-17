@@ -3,10 +3,29 @@ export interface Product {
   name: string;
   brand: string;
   price: number;
-  description?: string;
-  category?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  color?: string;
+  country?: string;
+  article?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProductData {
+  name: string;
+  brand: string;
+  price: number;
+  color?: string;
+  country?: string;
+  article?: string;
+}
+
+export interface UpdateProductData {
+  name?: string;
+  brand?: string;
+  price?: number;
+  color?: string;
+  country?: string;
+  article?: string;
 }
 
 export interface ImportResult {
@@ -16,20 +35,16 @@ export interface ImportResult {
   errors?: string[];
 }
 
-export interface GoogleSheetsData {
-  values: string[][];
-  range: string;
-}
-
 export interface ProductFilters {
   search?: string;
   brand?: string;
-  category?: string;
+  color?: string;
+  country?: string;
   minPrice?: number;
   maxPrice?: number;
+  article?: string;
 }
 
-export interface ImportFormData {
-  googleSheetsUrl?: string;
-  file?: File;
+export interface ApiError {
+  error: string;
 }
