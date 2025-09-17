@@ -1,0 +1,36 @@
+{
+  "name": "fullstack-table-import",
+  "version": "1.0.0",
+  "description": "Fullstack application for importing data from Google Sheets",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "cd backend && npm run dev",
+    "build": "cd backend && npm run build",
+    "start": "cd backend && npm run start",
+    "install": "npm install && cd backend && npm install"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "concurrently": "^8.2.2",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0"
+  },
+  "keywords": [
+    "nextjs",
+    "nuxt",
+    "typescript",
+    "google-sheets",
+    "postgresql"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@types/papaparse": "^5.3.16",
+    "papaparse": "^5.5.3"
+  }
+}
