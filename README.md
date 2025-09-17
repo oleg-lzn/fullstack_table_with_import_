@@ -17,7 +17,25 @@ cd frontend && npm install
 
 ```
 
-### 3. Настройка базы данных
+Добавить в корень папки backend файл
+
+.env.local
+
+туда положить
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password_here
+DB_NAME=fullstack_table_import
+
+# Next.js Configuration
+
+NEXTAUTH_SECRET=your_secret_here
+NEXTAUTH_URL=http://localhost:3005
+PORT=3005
+
+### 3. Настройка локальной базы данных
 
 ```bash
 
