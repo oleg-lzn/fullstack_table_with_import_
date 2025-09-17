@@ -27,7 +27,7 @@ export class SimpleProductService {
 
       if (filters?.search) {
         conditions.push(
-          `(name ILIKE $${paramCount} OR brand ILIKE $${paramCount} OR description ILIKE $${paramCount})`
+          `(name ILIKE $${paramCount} OR brand ILIKE $${paramCount} OR color ILIKE $${paramCount} OR country ILIKE $${paramCount})`
         );
         values.push(`%${filters.search}%`);
         paramCount++;
@@ -39,9 +39,15 @@ export class SimpleProductService {
         paramCount++;
       }
 
-      if (filters?.category) {
-        conditions.push(`category = $${paramCount}`);
-        values.push(filters.category);
+      if (filters?.color) {
+        conditions.push(`color = $${paramCount}`);
+        values.push(filters.color);
+        paramCount++;
+      }
+
+      if (filters?.country) {
+        conditions.push(`country = $${paramCount}`);
+        values.push(filters.country);
         paramCount++;
       }
 
@@ -69,8 +75,8 @@ export class SimpleProductService {
         name: row.name,
         brand: row.brand,
         price: parseFloat(row.price),
-        description: row.description,
-        category: row.category,
+        color: row.color,
+        country: row.country,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
       }));
@@ -93,8 +99,8 @@ export class SimpleProductService {
         name: row.name,
         brand: row.brand,
         price: parseFloat(row.price),
-        description: row.description,
-        category: row.category,
+        color: row.color,
+        country: row.country,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
       };
@@ -106,10 +112,10 @@ export class SimpleProductService {
   async createProduct(productData: Partial<Product>): Promise<Product> {
     const client = await this.getClient();
     try {
-      const { name, brand, price, description, category } = productData;
+      const { name, brand, price, color, country } = productData;
       const result = await client.query(
-        "INSERT INTO product (name, brand, price, description, category) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [name, brand, price, description, category]
+        "INSERT INTO product (name, brand, price, color, country) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+        [name, brand, price, color, country]
       );
 
       const row = result.rows[0];
@@ -118,8 +124,8 @@ export class SimpleProductService {
         name: row.name,
         brand: row.brand,
         price: parseFloat(row.price),
-        description: row.description,
-        category: row.category,
+        color: row.color,
+        country: row.country,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
       };
@@ -134,10 +140,10 @@ export class SimpleProductService {
   ): Promise<Product | null> {
     const client = await this.getClient();
     try {
-      const { name, brand, price, description, category } = productData;
+      const { name, brand, price, color, country } = productData;
       const result = await client.query(
-        "UPDATE product SET name = $1, brand = $2, price = $3, description = $4, category = $5, updated_at = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *",
-        [name, brand, price, description, category, id]
+        "UPDATE product SET name = $1, brand = $2, price = $3, color = $4, country = $5, updated_at = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *",
+        [name, brand, price, color, country, id]
       );
 
       if (result.rows.length === 0) return null;
@@ -148,8 +154,8 @@ export class SimpleProductService {
         name: row.name,
         brand: row.brand,
         price: parseFloat(row.price),
-        description: row.description,
-        category: row.category,
+        color: row.color,
+        country: row.country,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
       };

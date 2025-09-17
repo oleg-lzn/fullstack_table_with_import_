@@ -4,13 +4,9 @@ import Papa from "papaparse";
 export class GoogleSheetsService {
   async getSheetData(
     spreadsheetId: string,
-    range: string = "Sheet1!A:E"
+    gid: string = "0"
   ): Promise<GoogleSheetsData> {
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=0&range=${range}`;
-
-    if (!csvUrl) {
-      throw new Error("Неверный URL Google Sheets");
-    }
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${gid}`;
 
     const response = await fetch(csvUrl);
     if (!response.ok) {
@@ -29,7 +25,7 @@ export class GoogleSheetsService {
 
     return {
       values: parsed.data as string[][],
-      range,
+      range: `Sheet${gid}!A:Z`, // Формируем range на основе gid
     };
   }
 
@@ -37,6 +33,12 @@ export class GoogleSheetsService {
     const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
     if (!match) throw new Error("Неверный URL Google Sheets");
     return match[1];
+  }
+
+  extractGid(url: string): string {
+    // Извлекаем gid из URL (например, #gid=123456 или &gid=123456)
+    const gidMatch = url.match(/[#&]gid=([0-9]+)/);
+    return gidMatch ? gidMatch[1] : "0"; // По умолчанию первый лист имеет gid=0
   }
 
   parseProductData(values: string[][]): Partial<Product>[] {
@@ -74,10 +76,12 @@ export class GoogleSheetsService {
       бренд: "brand",
       price: "price",
       цена: "price",
-      description: "description",
-      описание: "description",
-      category: "category",
-      категория: "category",
+      color: "color",
+      цвет: "color",
+      country: "country",
+      "страна-изготовитель": "country",
+      "страна изготовитель": "country",
+      страна: "country",
     };
 
     return fieldMappings[header] || null;
@@ -97,8 +101,8 @@ export class GoogleSheetsService {
         } else if (
           field === "name" ||
           field === "brand" ||
-          field === "description" ||
-          field === "category"
+          field === "color" ||
+          field === "country"
         ) {
           product[field] = value;
         }

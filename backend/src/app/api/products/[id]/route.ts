@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { SimpleProductService } from "@/services/SimpleProductService";
+import { createCorsResponse, createCorsOptionsResponse } from "@/utils/cors";
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +9,7 @@ export async function GET(
   try {
     const id = parseInt(params.id);
     if (isNaN(id)) {
-      return NextResponse.json(
+      return createCorsResponse(
         { error: "Invalid product ID" },
         { status: 400 }
       );
@@ -18,13 +19,16 @@ export async function GET(
     const product = await productService.getProductById(id);
 
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return createCorsResponse(
+        { error: "Product not found" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(product);
+    return createCorsResponse(product);
   } catch (error) {
     console.error("Error fetching product:", error);
-    return NextResponse.json(
+    return createCorsResponse(
       { error: "Failed to fetch product" },
       { status: 500 }
     );
@@ -38,7 +42,7 @@ export async function PUT(
   try {
     const id = parseInt(params.id);
     if (isNaN(id)) {
-      return NextResponse.json(
+      return createCorsResponse(
         { error: "Invalid product ID" },
         { status: 400 }
       );
@@ -50,13 +54,16 @@ export async function PUT(
     const product = await productService.updateProduct(id, body);
 
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return createCorsResponse(
+        { error: "Product not found" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(product);
+    return createCorsResponse(product);
   } catch (error) {
     console.error("Error updating product:", error);
-    return NextResponse.json(
+    return createCorsResponse(
       { error: "Failed to update product" },
       { status: 500 }
     );
@@ -70,7 +77,7 @@ export async function DELETE(
   try {
     const id = parseInt(params.id);
     if (isNaN(id)) {
-      return NextResponse.json(
+      return createCorsResponse(
         { error: "Invalid product ID" },
         { status: 400 }
       );
@@ -80,15 +87,23 @@ export async function DELETE(
     const deleted = await productService.deleteProduct(id);
 
     if (!deleted) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return createCorsResponse(
+        { error: "Product not found" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({ message: "Product deleted successfully" });
+    return createCorsResponse({ message: "Product deleted successfully" });
   } catch (error) {
     console.error("Error deleting product:", error);
-    return NextResponse.json(
+    return createCorsResponse(
       { error: "Failed to delete product" },
       { status: 500 }
     );
   }
+}
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return createCorsOptionsResponse();
 }

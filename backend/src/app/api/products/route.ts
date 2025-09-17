@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { SimpleProductService } from "@/services/SimpleProductService";
 import { ProductFilters } from "@/types";
+import { createCorsResponse, createCorsOptionsResponse } from "@/utils/cors";
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,8 +18,12 @@ export async function GET(request: NextRequest) {
       filters.brand = searchParams.get("brand")!;
     }
 
-    if (searchParams.get("category")) {
-      filters.category = searchParams.get("category")!;
+    if (searchParams.get("color")) {
+      filters.color = searchParams.get("color")!;
+    }
+
+    if (searchParams.get("country")) {
+      filters.country = searchParams.get("country")!;
     }
 
     if (searchParams.get("minPrice")) {
@@ -32,10 +37,10 @@ export async function GET(request: NextRequest) {
     const productService = new SimpleProductService();
     const products = await productService.getAllProducts(filters);
 
-    return NextResponse.json(products);
+    return createCorsResponse(products);
   } catch (error) {
     console.error("Error fetching products:", error);
-    return NextResponse.json(
+    return createCorsResponse(
       { error: "Failed to fetch products" },
       { status: 500 }
     );
@@ -49,12 +54,17 @@ export async function POST(request: NextRequest) {
 
     const product = await productService.createProduct(body);
 
-    return NextResponse.json(product, { status: 201 });
+    return createCorsResponse(product, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);
-    return NextResponse.json(
+    return createCorsResponse(
       { error: "Failed to create product" },
       { status: 500 }
     );
   }
+}
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return createCorsOptionsResponse();
 }

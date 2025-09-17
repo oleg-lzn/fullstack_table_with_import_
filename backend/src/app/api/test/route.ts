@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { Client } from "pg";
+import { createCorsResponse, createCorsOptionsResponse } from "@/utils/cors";
 
 export async function GET() {
   try {
@@ -19,13 +19,13 @@ export async function GET() {
     const result = await client.query("SELECT COUNT(*) FROM product");
     await client.end();
 
-    return NextResponse.json({
+    return createCorsResponse({
       message: "Database connection successful",
       productCount: result.rows[0].count,
     });
   } catch (error) {
     console.error("Database test error:", error);
-    return NextResponse.json(
+    return createCorsResponse(
       {
         error: "Database connection failed",
         details: error instanceof Error ? error.message : "Unknown error",
@@ -33,4 +33,9 @@ export async function GET() {
       { status: 500 }
     );
   }
+}
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return createCorsOptionsResponse();
 }
