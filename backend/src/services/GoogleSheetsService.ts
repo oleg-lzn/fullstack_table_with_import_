@@ -8,6 +8,10 @@ export class GoogleSheetsService {
   ): Promise<GoogleSheetsData> {
     const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=0&range=${range}`;
 
+    if (!csvUrl) {
+      throw new Error("Неверный URL Google Sheets");
+    }
+
     const response = await fetch(csvUrl);
     if (!response.ok) {
       throw new Error(`Ошибка загрузки: ${response.status}`);

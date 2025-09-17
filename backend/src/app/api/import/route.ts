@@ -3,7 +3,7 @@ import { GoogleSheetsService } from "@/services/GoogleSheetsService";
 import { SimpleProductService } from "@/services/SimpleProductService";
 import { ImportResult } from "@/types";
 
-export async function POST(request: NextRequest) {
+export async function importProductsFromGoogleSheets(request: NextRequest) {
   try {
     const body = await request.json();
     const { url } = body;
@@ -61,3 +61,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response, { status: 500 });
   }
 }
+
+export { importProductsFromGoogleSheets as POST };
