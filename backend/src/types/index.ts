@@ -5,6 +5,7 @@ export interface Product {
   price: number;
   color?: string;
   country?: string;
+  article?: string; // Артикул как строка
   createdAt: Date;
   updatedAt: Date;
 }

@@ -47,12 +47,29 @@ export class GoogleSheetsService {
     }
 
     const [headers, ...dataRows] = values;
-    const fieldMap = this.createFieldMapping(headers);
+    console.log("Headers:", headers);
 
-    return dataRows
-      .filter((row) => row.length && row[0]?.trim())
-      .map((row) => this.mapRowToProduct(row, fieldMap))
-      .filter((product) => this.isValidProduct(product));
+    const fieldMap = this.createFieldMapping(headers);
+    console.log("Field mapping:", fieldMap);
+
+    const filteredRows = dataRows.filter((row) => row.length && row[0]?.trim());
+    console.log(
+      `Filtered ${filteredRows.length} rows from ${dataRows.length} total rows`
+    );
+
+    const mappedProducts = filteredRows.map((row) =>
+      this.mapRowToProduct(row, fieldMap)
+    );
+    console.log("Sample mapped product:", mappedProducts[0]);
+
+    const validProducts = mappedProducts.filter((product) =>
+      this.isValidProduct(product)
+    );
+    console.log(
+      `Valid products: ${validProducts.length} from ${mappedProducts.length} mapped products`
+    );
+
+    return validProducts;
   }
 
   private createFieldMapping(headers: string[]): Record<number, keyof Product> {
@@ -72,16 +89,21 @@ export class GoogleSheetsService {
       name: "name",
       "product name": "name",
       название: "name",
+      "название товара": "name",
       brand: "brand",
       бренд: "brand",
       price: "price",
       цена: "price",
+      "цена, руб.*": "price",
+      "цена руб": "price",
+      "цена, руб": "price",
       color: "color",
       цвет: "color",
       country: "country",
       "страна-изготовитель": "country",
       "страна изготовитель": "country",
       страна: "country",
+      артикул: "article", // Артикул как строка
     };
 
     return fieldMappings[header] || null;
@@ -97,12 +119,15 @@ export class GoogleSheetsService {
       const value = row[+index];
       if (value) {
         if (field === "price") {
-          product[field] = parseFloat(value) || 0;
+          // Очищаем цену от лишних символов и парсим
+          const cleanPrice = value.replace(/[^\d.,]/g, "").replace(",", ".");
+          product[field] = parseFloat(cleanPrice) || 0;
         } else if (
           field === "name" ||
           field === "brand" ||
           field === "color" ||
-          field === "country"
+          field === "country" ||
+          field === "article"
         ) {
           product[field] = value;
         }
