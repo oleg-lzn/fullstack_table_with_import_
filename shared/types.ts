@@ -3,8 +3,9 @@ export interface Product {
   name: string;
   brand: string;
   price: number;
-  description?: string;
-  category?: string;
+  color?: string;
+  country?: string;
+  article?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,7 +25,9 @@ export interface GoogleSheetsData {
 export interface ProductFilters {
   search?: string;
   brand?: string;
-  category?: string;
+  color?: string;
+  country?: string;
+  article?: string;
   minPrice?: number;
   maxPrice?: number;
 }

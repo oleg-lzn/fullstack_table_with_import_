@@ -6,18 +6,18 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: "http://localhost:3005/api", // Правильный порт бэкенда
+      apiBase: "http://localhost:3005/api",
     },
   },
   ssr: false,
   nitro: {
     devProxy: {
       "/api": {
-        target: "http://localhost:3005/api", // Правильный порт бэкенда
+        target: "http://localhost:3005/api",
         changeOrigin: true,
       },
     },
   },
-  pages: true, // Убедитесь что роуты включены
+  pages: true,
   compatibilityDate: "2025-01-17",
 });
